@@ -1,68 +1,509 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nome do Seu Site</title>
-    <link rel="stylesheet" href="style.css"> <!-- Link para o CSS -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>⚖️ Cavalaria Downtown - Sistema Judicial (Código Penal 1899)</title>
+
+<!-- ===== STYLES (dourado / western) ===== -->
+<style>
+/* ====== ESTILO GERAL ====== */
+:root{
+  --gold-1:#c9a13f;
+  --gold-2:#b8860b;
+  --bg:#0f0f0f;
+  --card:#1b1b1b;
+}
+*{box-sizing:border-box}
+body{
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: var(--bg);
+  color:#f5f5f5;
+  margin:0;
+  padding:0;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* CABEÇALHO */
+header{
+  background:linear-gradient(90deg,var(--gold-1),var(--gold-2));
+  color:#0f0f0f;
+  text-align:center;
+  padding:20px 10px;
+  font-weight:800;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  box-shadow:0 2px 12px rgba(0,0,0,0.5);
+}
+header h1{margin:0;font-size:18px;display:flex;gap:10px;align-items:center;justify-content:center;}
+header .icon{font-size:20px;}
+
+/* CONTAINER PRINCIPAL */
+.container{
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+  padding:24px;
+  align-items:center;
+}
+
+/* INPUTS (topo) */
+.lateral{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  justify-content:center;
+  width:100%;
+  max-width:1200px;
+}
+.input-box{
+  display:flex;
+  flex-direction:column;
+  width:230px;
+}
+.input-box label{font-weight:700;color:var(--gold-1);margin-bottom:6px;font-size:13px;}
+.input-box input{
+  padding:9px;border-radius:8px;border:1px solid var(--gold-1);
+  background:#121212;color:#fff;font-size:14px;
+}
+
+/* GRID PRINCIPAL */
+.main-grid{
+  display:grid;
+  grid-template-columns: 1fr 340px; /* crimes area | side column */
+  gap:26px;
+  width:100%;
+  max-width:1400px;
+  align-items:start;
+  padding-bottom:30px;
+}
+
+/* AREA DE CRIMES: 2 colunas, 5 boxes (5th central) */
+.crime-area{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(250px,1fr));
+  gap:20px;
+}
+.crime-area .crime-box:nth-child(5){
+  grid-column: 1 / span 2;
+  justify-self:center;
+  width:70%;
+}
+
+/* CAIXAS */
+.crime-box{
+  background:var(--card);
+  border:1px solid var(--gold-1);
+  border-radius:10px;
+  padding:14px;
+  box-shadow:0 0 18px rgba(201,161,63,0.12);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.crime-box:hover{transform:translateY(-4px);box-shadow:0 0 30px rgba(201,161,63,0.18);}
+.crime-box h3{
+  text-align:center;color:#e1b74c;margin:0 0 10px 0;padding-bottom:8px;border-bottom:1px solid rgba(201,161,63,0.12);
+  font-size:15px;
+}
+.crime-list{list-style:none;padding:0;margin:0;max-height:260px;overflow:auto;}
+.crime-list li{margin:7px 0;font-size:14px;display:flex;align-items:center;}
+.crime-list li input[type="checkbox"]{margin-right:8px;}
+
+/* SIDE COLUMN (preview + atenuantes etc) */
+.side-column{display:flex;flex-direction:column;gap:16px;width:340px;}
+.preview-box{
+  background:var(--card);border:1px solid var(--gold-1);border-radius:12px;padding:16px;text-align:center;
+  box-shadow:0 0 22px rgba(201,161,63,0.14);
+}
+.preview-box h3{color:#e1b74c;margin:0 0 10px 0;}
+.preview-section{margin-bottom:12px;text-align:left;}
+.preview-section h4{color:var(--gold-1);margin:0 0 6px 0;font-size:13px;}
+#selectedCrimesPreview{min-height:48px;padding:8px;background:#0f0f0f;border-radius:6px;border:1px solid rgba(255,255,255,0.02)}
+textarea,input[type="text"]{width:100%;padding:8px;border-radius:8px;border:1px solid var(--gold-1);background:#111;color:#fff;font-size:14px}
+
+/* BOTÕES */
+.preview-buttons button{
+  background:linear-gradient(90deg,var(--gold-1),var(--gold-2));
+  color:#000;border:none;padding:10px;border-radius:8px;font-weight:800;cursor:pointer;width:100%;
+  text-transform:uppercase;letter-spacing:1px;margin-top:6px;
+}
+.preview-buttons button:last-child{background:linear-gradient(90deg,#b32727,#8b0000);color:#fff;}
+.preview-buttons button:hover{transform:scale(1.02)}
+
+/* CORES ADICIONAIS */
+.green{color:#2ecc71}
+.red{color:#e74c3c}
+.blue{color:#3498db}
+
+/* SCROLLBARS leves */
+.crime-list::-webkit-scrollbar{width:8px;height:8px}
+.crime-list::-webkit-scrollbar-thumb{background:rgba(201,161,63,0.18);border-radius:8px}
+
+/* RESPONSIVO */
+@media (max-width:1100px){
+  .main-grid{grid-template-columns:1fr}
+  .side-column{width:100%}
+  .crime-area .crime-box:nth-child(5){width:100%}
+}
+@media (max-width:520px){
+  .input-box{width:100%}
+}
+</style>
 </head>
 <body>
-    <!-- Cabeçalho que vai ficar no topo da página -->
-    <header class="top-header">
-        <div class="logo-container">
-            <img src="logo.png" alt="Logo" class="logo">
-            <h1>Cavalaria Atlanta</h1>
-        </div>
-        <p>Sistema Judicial (Código Penal 1899)</p>
-    </header>
 
-    <!-- O restante do conteúdo do seu site -->
-    <main>
-        <section>
-            <h2>Seção de conteúdo do site</h2>
-            <p>Aqui vem o conteúdo do site.</p>
-        </section>
-    </main>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora Penal</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <h1>Calculadora Penal</h1>
+<header>
+  <h1><span class="icon">⚖️</span> Cavalaria Downtown - Sistema Judicial (Código Penal 1899)</h1>
+</header>
 
-  <div class="form-container">
-    <label for="crimes">Selecione os Crimes:</label>
-    <select id="crimes" multiple>
-      <option value="homicidio">Homicídio Doloso</option>
-      <option value="cruelty">Crueldade Animal</option>
-      <option value="fuga">Fuga de Pessoa Presa</option>
-      <option value="ameaca">Ameaçar Alguém</option>
-    </select>
+<div class="container">
 
-    <label for="atenuantes">Atenuantes:</label>
-    <select id="atenuantes">
-      <option value="reup">Réu primário (Redução de 10%)</option>
-    </select>
-
-    <label for="agravantes">Agravantes:</label>
-    <select id="agravantes">
-      <option value="mau-comportamento">Mau comportamento (Aumento de 20%)</option>
-    </select>
-
-    <button onclick="calcular()">Calcular Pena</button>
+  <!-- inputs topo -->
+  <div class="lateral">
+    <div class="input-box"><label for="militar">Nome do Militar</label><input id="militar" type="text" placeholder="Patente e nome (conforme discord)"></div>
+    <div class="input-box"><label for="preso">Nome do Preso</label><input id="preso" type="text" placeholder="Nome do Preso"></div>
+    <div class="input-box"><label for="rgPreso">RG do Preso</label><input id="rgPreso" type="text" placeholder="RG do Preso"></div>
+    <div class="input-box"><label for="advogado">ID do Advogado</label><input id="advogado" type="text" placeholder="ID (opcional)"></div>
   </div>
 
-  <h2>Resultado</h2>
-  <p id="resultado">Pena Total: <span id="pena-total">0</span> meses</p>
-  
-  <button onclick="copiarRelatorio()">📋 Copiar Relatório</button>
+  <!-- grid principal -->
+  <div class="main-grid">
 
-  <script src="script.js"></script>
+    <!-- crimes area (2 por linha, 5° central) -->
+    <div class="crime-area">
+
+      <!-- I - Crimes contra a vida (usando os artigos que você passou: ART.8..ART.13 etc) -->
+      <div class="crime-box">
+        <h3>I - CRIMES CONTRA A VIDA</h3>
+        <ul class="crime-list">
+          <li><input type="checkbox" class="select-crime" data-penalty="5" value="ART. 8 - AMEAÇA"> ART. 8 - AMEAÇA</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="ART. 8.1 - AMEAÇA CONTRA OFICIAL"> ART. 8.1 - AMEAÇA CONTRA OFICIAL</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART. 8.2 - AMEAÇA CONTRA AUTORIDADE"> ART. 8.2 - AMEAÇA CONTRA AUTORIDADE</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART. 9 - HOMICÍDIO"> ART. 9 - HOMICÍDIO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART. 9.1 - HOMICÍDIO CULPOSO"> ART. 9.1 - HOMICÍDIO CULPOSO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART. 9.2 - HOMICÍDIO A OFICIAL"> ART. 9.2 - HOMICÍDIO A OFICIAL</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART. 9.3 - HOMICÍDIO A AUTORIDADE"> ART. 9.3 - HOMICÍDIO A AUTORIDADE</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.10 - TENTATIVA DE HOMICÍDIO"> ART. 10 - TENTATIVA DE HOMICÍDIO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.10.1 - TENTATIVA A OFICIAL"> ART. 10.1 - TENTATIVA A OFICIAL</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.10.2 - TENTATIVA A AUTORIDADE"> ART. 10.2 - TENTATIVA A AUTORIDADE</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.11 - SEQUESTRO E CÁRCERE PRIVADO"> ART. 11 - SEQUESTRO E CÁRCERE PRIVADO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.11.1 - SEQUESTRO A OFICIAL"> ART. 11.1 - SEQUESTRO A OFICIAL</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.11.2 - SEQUESTRO A AUTORIDADE"> ART. 11.2 - SEQUESTRO A AUTORIDADE</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.12 - CRUELDADE ANIMAL"> ART. 12 - CRUELDADE ANIMAL</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.13 - OMISSÃO DE SOCORRO"> ART. 13 - OMISSÃO DE SOCORRO</li>
+        </ul>
+      </div>
+
+      <!-- II - Crimes contra a honra -->
+      <div class="crime-box">
+        <h3>II - CRIMES CONTRA A HONRA</h3>
+        <ul class="crime-list">
+          <li><input type="checkbox" class="select-crime" data-penalty="5" value="ART.14.1 - DIFAMAÇÃO"> ART. 14.1 - DIFAMAÇÃO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="ART.14.2 - CALÚNIA"> ART. 14.2 - CALÚNIA</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.14.3 - INJÚRIA"> ART. 14.3 - INJÚRIA</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="ART.15 - ATO OBSCENO"> ART. 15 - ATO OBSCENO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="25" value="ART.16 - ATENTADO AO PUDOR"> ART. 16 - ATENTADO AO PUDOR</li>
+        </ul>
+      </div>
+
+      <!-- III - Crimes contra o patrimônio -->
+      <div class="crime-box">
+        <h3>III - CRIMES CONTRA O PATRIMÔNIO</h3>
+        <ul class="crime-list">
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.17 - ROUBO"> ART. 17 - ROUBO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.17.1 - LATROCÍNIO"> ART. 17.1 - LATROCÍNIO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="7" value="ART.17.2 - TENTATIVA DE ROUBO"> ART. 17.2 - TENTATIVA DE ROUBO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.18 - ROUBO À LOJA OU CEMITÉRIO"> ART. 18 - ROUBO À LOJA OU CEMITÉRIO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.19 - ROUBO À BANCO OU PETROLÍFERA"> ART. 19 - ROUBO À BANCO OU PETROLÍFERA</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.20 - ROUBO À ESTAÇÕES"> ART. 20 - ROUBO À ESTAÇÕES</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="ART.21 - FURTO"> ART. 21 - FURTO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="ART.22 - FURTO À SEPULTURAS"> ART. 22 - FURTO À SEPULTURAS</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.23 - EXTORSÃO MEDIANTE SEQUESTRO"> ART. 23 - EXTORSÃO MEDIANTE SEQUESTRO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="ART.24 - ESTELIONATO"> ART. 24 - ESTELIONATO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.25 - LAVAGEM"> ART. 25 - LAVAGEM</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.26 - POSSE ILEGAL DE ARMAS"> ART. 26 - POSSE ILEGAL DE ARMAS</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="ART.26.1 - POSSE DE SUBSTÂNCIAS/PRODUTOS ILEGAIS"> ART. 26.1 - POSSE DE SUBSTÂNCIAS/PRODUTOS ILEGAIS</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.26.2 - POSSE DE ITENS DE SERVIDORES"> ART. 26.2 - POSSE DE ITENS DE SERVIDORES</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="ART.26.3 - TRANSITAR COM ARMAS DURANTE PROCESSOS"> ART. 26.3 - TRANSITAR COM ARMAS DURANTE PROCESSOS</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.26.4 - POSSE ILEGAL EM ZONAS POPULARES"> ART. 26.4 - POSSE ILEGAL EM ZONAS POPULARES</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.27 - RECEPTAÇÃO"> ART. 27 - RECEPTAÇÃO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.28.1 - DANOS MORAIS"> ART. 28.1 - DANOS MORAIS</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.29 - INVASÃO À PROPRIEDADE"> ART. 29 - INVASÃO À PROPRIEDADE</li>
+        </ul>
+      </div>
+
+      <!-- IV - Crimes contra a administração pública -->
+      <div class="crime-box">
+        <h3>IV - CRIMES CONTRA A ADMINISTRAÇÃO PÚBLICA</h3>
+        <ul class="crime-list">
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.31 - DESOBEDIÊNCIA"> ART. 31 - DESOBEDIÊNCIA</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.32 - RESISTÊNCIA À PRISÃO"> ART. 32 - RESISTÊNCIA À PRISÃO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.32.1 - RESISTÊNCIA A AUTORIDADE"> ART. 32.1 - RESISTÊNCIA A AUTORIDADE</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.33 - FUGA DE PESSOA PRESA"> ART. 33 - FUGA DE PESSOA PRESA</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.33.1 - FUGA POR AUTORIDADE"> ART. 33.1 - FUGA POR AUTORIDADE</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.33.2 - FUGA E INVASÃO A DELEGACIAS"> ART. 33.2 - FUGA E INVASÃO A DELEGACIAS</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.34 - CORRUPÇÃO PASSIVA"> ART. 34 - CORRUPÇÃO PASSIVA</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.35 - CORRUPÇÃO ATIVA"> ART. 35 - CORRUPÇÃO ATIVA</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.36 - PREVARICAÇÃO"> ART. 36 - PREVARICAÇÃO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="ART.40 - ASSOCIAÇÃO CRIMINOSA"> ART. 40 - ASSOCIAÇÃO CRIMINOSA</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.41 - OBSTRUÇÃO DE JUSTIÇA"> ART. 41 - OBSTRUÇÃO DE JUSTIÇA</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="5" value="ART.42 - IMPOSSIBILIDADE DE IDENTIFICAÇÃO"> ART. 42 - IMPOSSIBILIDADE DE IDENTIFICAÇÃO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="5" value="ART.42.1 - OCULTAÇÃO FACIAL"> ART. 42.1 - OCULTAÇÃO FACIAL</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.43 - FALSA IDENTIDADE"> ART. 43 - FALSA IDENTIDADE</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="ART.44 - FALSA COMUNICAÇÃO DE CRIME"> ART. 44 - FALSA COMUNICAÇÃO DE CRIME</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.45 - FALSO TESTEMUNHO"> ART. 45 - FALSO TESTEMUNHO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="ART.46 - POSSUIR 03 OU MAIS FICHAS"> ART. 46 - POSSUIR 03 OU MAIS FICHAS</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="0" value="ART.47 - LEI DE PROPRIEDADE INDUSTRIAL"> ART. 47 - LEI DE PROPRIEDADE INDUSTRIAL</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="30" value="ART.47.1 - VENDA ILEGAL DE PRODUTOS RESTRITOS"> ART. 47.1 - VENDA ILEGAL DE PRODUTOS RESTRITOS</li>
+        </ul>
+      </div>
+
+      <!-- V - Crimes contra a ordem pública (5th centralizado) -->
+      <div class="crime-box">
+        <h3>V - CRIMES CONTRA A ORDEM PÚBLICA</h3>
+        <ul class="crime-list">
+          <li><input type="checkbox" class="select-crime" data-penalty="5" value="ART.48 - EXCESSO DE VELOCIDADE"> ART. 48 - EXCESSO DE VELOCIDADE</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.49 - DESORDEM SOCIAL"> ART. 49 - DESORDEM SOCIAL</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="15" value="ART.50 - DISPARO DE ARMA DE FOGO"> ART. 50 - DISPARO DE ARMA DE FOGO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="0" value="ART.53 - NÃO RESPEITAR PERÍMETRO DA AÇÃO"> ART. 53 - NÃO RESPEITAR PERÍMETRO DA AÇÃO</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="5" value="ART.54 - TRANSITAR COM ANIMAIS EXÓTICOS"> ART. 54 - TRANSITAR COM ANIMAIS EXÓTICOS</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="ART.55 - CRIMES CONTRA INDÍGENAS"> ART. 55 - CRIMES CONTRA INDÍGENAS</li>
+        </ul>
+      </div>
+
+    </div> <!-- fim crime-area -->
+
+    <!-- coluna lateral: pré-visualização em cima + atenuantes/agravantes/outros -->
+    <div class="side-column">
+
+      <!-- PRÉ-VISUALIZAÇÃO -->
+      <div class="preview-box">
+        <h3>Pré-visualização</h3>
+
+        <div class="preview-section">
+          <h4>⚖️ CRIMES SELECIONADOS</h4>
+          <div id="selectedCrimesPreview">Nenhum crime selecionado</div>
+        </div>
+
+        <div class="preview-section">
+          <h4>📦 Itens Apreendidos</h4>
+          <textarea id="itensApreendidos" oninput="updateItensApreendidos()">Não informado</textarea>
+        </div>
+
+        <div class="preview-section">
+          <h4>💵 Dinheiro Sujo</h4>
+          <input id="dinheiroSuj" type="text" oninput="updateDinheiroSuj()" value="R$ 0,00">
+        </div>
+
+        <div class="preview-section">
+          <h4>PENA TOTAL</h4>
+          <div id="penaTotalPreview">0</div> <span>meses</span>
+        </div>
+
+        <div class="preview-buttons">
+          <button id="copyReportBtn" onclick="copyReport()">Copiar Relatório</button>
+          <button id="clearBtn" onclick="clearForm()">Limpar Tudo</button>
+        </div>
+      </div>
+
+      <!-- ATENUANTES -->
+      <div class="crime-box">
+        <h3 class="green">✅ Atenuantes</h3>
+        <ul class="crime-list">
+          <li><input type="checkbox" class="select-crime" data-penalty="-10" value="Réu primário"> Réu primário (-10%)</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="-20" value="Bom comportamento"> Bom comportamento (-20%)</li>
+        </ul>
+      </div>
+
+      <!-- AGRAVANTES -->
+      <div class="crime-box">
+        <h3 class="red">❌ Agravantes</h3>
+        <ul class="crime-list">
+          <li><input type="checkbox" class="select-crime" data-penalty="10" value="Réu reincidente"> Réu reincidente (+10%)</li>
+          <li><input type="checkbox" class="select-crime" data-penalty="20" value="Mau comportamento"> Mau comportamento (+20%)</li>
+        </ul>
+      </div>
+
+      <!-- OUTROS -->
+      <div class="crime-box">
+        <h3 class="blue">📌 Outros</h3>
+        <ul class="crime-list">
+          <li><input type="checkbox" class="select-crime" value="Mandado de Busca"> Mandado de Busca</li>
+          <li><input type="checkbox" class="select-crime" value="Porte de Arma"> Porte de Arma</li>
+          <li><input type="checkbox" class="select-crime" value="Fiança"> Fiança</li>
+          <li><input type="checkbox" class="select-crime" value="Reanimado"> Reanimado</li>
+        </ul>
+      </div>
+
+    </div> <!-- fim side-column -->
+
+  </div> <!-- fim main-grid -->
+
+</div> <!-- fim container -->
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+/* Funções principais: calcular pena, atualizar preview, copiar relatório, limpar */
+function toIntSafe(v){
+  // recebe string/number; return integer (or 0)
+  const n = parseInt(v);
+  return isNaN(n) ? 0 : n;
+}
+
+function updateCrimePreview(){
+  const checked = [...document.querySelectorAll('.select-crime:checked')];
+  // crimes list (only those with article-like values) for preview
+  const crimesText = checked
+    .map(c => c.value)
+    .filter(Boolean)
+    .join('\\n• ');
+  document.getElementById('selectedCrimesPreview').innerText = crimesText ? '• ' + crimesText : 'Nenhum crime selecionado';
+}
+
+/* calcula pena base: soma dos data-penalty (primeiro número que colocamos manualmente).
+   Atenuantes/agravantes aqui estão como percentuais (ex: -10 = -10%), aplicados depois.
+   Observação: atenuantes/agravantes foram colocados como checkbox com data-penalty percentuais.
+*/
+function calculatePenaTotal(){
+  const checked = [...document.querySelectorAll('.select-crime:checked')];
+  // soma de valores absolutos (penalidades base)
+  let base = checked.reduce((acc, c) => {
+    const v = c.getAttribute('data-penalty');
+    // if it's percent (negative or positive small), ignore here for base.
+    // We'll treat >= -100 && <= 100 as possible percent; but we only used percent for modifiers (-10, -20, +10, +20)
+    // To be safe: if checkbox value belongs to atenuantes/agravantes we detect by keywords in value.
+    const isModifier = /réu primário|bom comportamento|réu reincidente|mau comportamento/i.test(c.value);
+    if(isModifier) return acc;
+    const n = toIntSafe(v);
+    return acc + n;
+  }, 0);
+
+  // modifiers percent
+  const modifiers = checked.reduce((mods, c) => {
+    const v = toIntSafe(c.getAttribute('data-penalty'));
+    const isModifier = /réu primário|bom comportamento|réu reincidente|mau comportamento/i.test(c.value);
+    if(isModifier && v !== 0) mods.push(v);
+    return mods;
+  }, []);
+
+  // apply modifiers sequentially as percents over base:
+  // for negative (e.g. -10) -> reduce by 10%, for positive -> increase.
+  let final = base;
+  modifiers.forEach(m => {
+    final = final + (final * (m / 100));
+  });
+
+  // round final to integer
+  final = Math.round(final);
+  return { base, final };
+}
+
+function refreshPenaAndPreview(){
+  updateCrimePreview();
+  const pen = calculatePenaTotal();
+  document.getElementById('penaTotalPreview').innerText = pen.final;
+}
+
+/* attach listeners to all .select-crime to recalc when change */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.select-crime').forEach(el => {
+    el.addEventListener('change', refreshPenaAndPreview);
+  });
+  // initial refresh
+  refreshPenaAndPreview();
+});
+
+/* update itens/dinheiro preview */
+function updateItensApreendidos(){
+  const v = document.getElementById('itensApreendidos').value || 'Não informado';
+  // no HTML we don't have itensApreendidosPreview block separate, but preview area uses selectedCrimesPreview and other fields
+  // We'll keep itens in report only.
+}
+function updateDinheiroSuj(){
+  const v = document.getElementById('dinheiroSuj').value || 'R$ 0,00';
+}
+
+/* limpar */
+function clearForm(){
+  document.querySelectorAll('input[type="text"]').forEach(i=>i.value='');
+  document.querySelectorAll('textarea').forEach(t=>t.value='Não informado');
+  document.querySelectorAll('.select-crime').forEach(c=>c.checked=false);
+  refreshPenaAndPreview();
+}
+
+/* copiar relatório (formato que você pediu). Usa Cavalaria Downtown */
+function copyReport(){
+  const militar = document.getElementById('militar').value || 'Não informado';
+  const preso = document.getElementById('preso').value || 'Não informado';
+  const rg = document.getElementById('rgPreso').value || 'Não informado';
+  const itens = document.getElementById('itensApreendidos').value || 'Não informado';
+  const dinheiro = document.getElementById('dinheiroSuj').value || 'R$ 0,00';
+
+  const selectedCrimes = [...document.querySelectorAll('.crime-area .select-crime:checked, .side-column .select-crime:checked')]
+    .filter(c => !/réu primário|bom comportamento|réu reincidente|mau comportamento/i.test(c.value)) // filtros para excluir modificadores das linhas de crimes
+    .map(c => '• ' + c.value)
+    .join('\\n') || 'Nenhum crime selecionado';
+
+  // atenuantes e agravantes selecionados (texto)
+  const atenuantes = [...document.querySelectorAll('.side-column .green .select-crime:checked, .side-column .select-crime:checked')]
+    .filter(c=>/réu primário|bom comportamento/i.test(c.value))
+    .map(c=> '• ' + c.value).join('\\n');
+
+  const agravantes = [...document.querySelectorAll('.side-column .red .select-crime:checked, .side-column .select-crime:checked')]
+    .filter(c=>/réu reincidente|mau comportamento/i.test(c.value))
+    .map(c=> '• ' + c.value).join('\\n');
+
+  const pena = document.getElementById('penaTotalPreview').innerText || '0';
+
+  // Build report text (exact format requested, but with Downtown)
+  const report = 
+`📋 **RELATÓRIO DE PRISÃO - CAVALARIA DOWNTOWN**
+
+🪖 **MILITAR QUE PRENDEU:**
+Nome: ${militar}
+👤 **DADOS DO PRESO**
+Nome: ${preso}
+RG: ${rg}
+
+⚖️ **CRIMES COMETIDOS**
+${selectedCrimes}
+
+📌 **OBSERVAÇÕES**
+${itens}
+Dinheiro Sujo: ${dinheiro}
+
+✅ **ATENUANTES**
+${atenuantes || '• Nenhum selecionado'}
+
+❌ **AGRAVANTES**
+${agravantes || '• Nenhum selecionado'}
+
+═══════════════════
+⏱️ **PENA TOTAL:** ${pena} meses
+═══════════════════`;
+
+  // copy to clipboard
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(report).then(()=> {
+      alert('Relatório copiado para a área de transferência!');
+    }, ()=> {
+      // fallback
+      fallbackCopyTextToClipboard(report);
+    });
+  } else {
+    fallbackCopyTextToClipboard(report);
+  }
+}
+
+// fallback for older browsers
+function fallbackCopyTextToClipboard(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); alert('Relatório copiado! (fallback)'); } catch(e){ alert('Não foi possível copiar automaticamente.'); }
+  document.body.removeChild(ta);
+}
+</script>
+
 </body>
 </html>

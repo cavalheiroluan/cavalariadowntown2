@@ -1,79 +1,69 @@
-function calcular() {
-  let crimes = Array.from(document.getElementById('crimes').selectedOptions).map(option => option.value);
-  let atenuantes = document.getElementById('atenuantes').value;
-  let agravantes = document.getElementById('agravantes').value;
+let penaTotal = 0;
 
-  let pena = 0;
-
-  // Cálculo básico de pena
-  if (crimes.includes('homicidio')) {
-    pena += 30; // Homicídio Doloso
-  }
-  if (crimes.includes('cruelty')) {
-    pena += 5; // Crueldade Animal
-  }
-  if (crimes.includes('fuga')) {
-    pena += 10; // Fuga de Pessoa Presa
-  }
-  if (crimes.includes('ameaça')) {
-    pena += 5; // Ameaçar Alguém
-  }
-  if (crimes.includes('ameaça contra oficial ')) {
-    pena += 5; // Ameaçar Alguém
-  }
-  if (crimes.includes('ameaça contra autoridade')) {
-    pena += 5; // Ameaçar Alguém
-  }
-  if (crimes.includes('homicidio contra autoridade')) {
-    pena += 5; // Ameaçar Alguém
-  }
-  if (crimes.includes('')) {
-    pena += 5; // Ameaçar Alguém
-  }
-
-  // Aplicando atenuantes
-  if (atenuantes === 'reup') {
-    pena -= pena * 0.1; // Redução de 10%
-  }
-
-  // Aplicando agravantes
-  if (agravantes === 'mau-comportamento') {
-    pena += pena * 0.2; // Aumento de 20%
-  }
-
-  // Atualizando o resultado
-  document.getElementById('pena-total').textContent = Math.round(pena);
+function updateCrimePreview() {
+    const selectedCrimes = [...document.querySelectorAll('.select-crime:checked')]
+        .map(input => input.value)
+        .join('\n• ');
+    document.getElementById('selectedCrimesPreview').innerText = selectedCrimes || 'Nenhum crime selecionado';
 }
 
-function copiarRelatorio() {
-  const relatorio = `
-📋 **RELATÓRIO DE PRISÃO - CAVALARIA ATLANTA**
+document.querySelectorAll('.select-crime').forEach(crime => {
+    crime.addEventListener('change', () => {
+        const selected = [...document.querySelectorAll('.select-crime:checked')];
+        penaTotal = selected.reduce((t, c) => t + (parseInt(c.dataset.penalty) || 0), 0);
+        document.getElementById('penaTotalPreview').innerText = penaTotal;
+        updateCrimePreview();
+    });
+});
+
+function updateItensApreendidos() {
+    const val = document.getElementById('itensApreendidos').value;
+    document.getElementById('itensApreendidosPreview').innerText = val || 'Não informado';
+}
+
+function updateDinheiroSuj() {
+    const val = document.getElementById('dinheiroSuj').value;
+    document.getElementById('dinheiroSujPreview').innerText = val || 'R$ 0,00';
+}
+
+function clearForm() {
+    document.querySelectorAll('input[type="text"]').forEach(e => e.value = '');
+    document.querySelectorAll('textarea').forEach(e => e.value = '');
+    document.querySelectorAll('.select-crime').forEach(e => e.checked = false);
+    penaTotal = 0;
+    document.getElementById('penaTotalPreview').innerText = '0';
+    document.getElementById('selectedCrimesPreview').innerText = 'Nenhum crime selecionado';
+}
+
+function copyReport() {
+    const militar = document.getElementById('militar').value || 'Não informado';
+    const preso = document.getElementById('preso').value || 'Não informado';
+    const rg = document.getElementById('rgPreso').value || 'Não informado';
+    const crimes = [...document.querySelectorAll('.select-crime:checked')]
+        .map(c => '• ' + c.value).join('\n') || 'Nenhum crime selecionado';
+    const pena = document.getElementById('penaTotalPreview').innerText || '0';
+    const itens = document.getElementById('itensApreendidos').value || 'Não informado';
+
+    const report = `📋 **RELATÓRIO DE PRISÃO - CAVALARIA ATLANTA**
 
 🪖 **MILITAR QUE PRENDEU:**
-Nome: Não informado
+Nome: ${militar}
+
 👤 **DADOS DO PRESO**
-Nome: Não informado
-RG: Não informado
+Nome: ${preso}
+RG: ${rg}
 
 ⚖️ **CRIMES COMETIDOS**
-• Homicídio Doloso
-• Crueldade Animal
-• Fuga de Pessoa Presa
+${crimes}
 
 📌 **OBSERVAÇÕES**
-🔫 Possui porte de arma
-
-✅ **ATENUANTES**
-• Réu primário: Redução de 10%
-
-❌ **AGRAVANTES**
-• Mau comportamento: Aumento de 20%
+${itens}
 
 ═══════════════════
-⏱️ **PENA TOTAL:** ${document.getElementById('pena-total').textContent} meses
+⏱️ **PENA TOTAL:** ${pena} meses
 ═══════════════════`;
 
-  navigator.clipboard.writeText(relatorio).then(() => {
-    alert("Relatório copiado para a área de transferência!");
-  });
+    navigator.clipboard.writeText(report).then(() => {
+        alert('Relatório copiado com sucesso!');
+    });
 }
