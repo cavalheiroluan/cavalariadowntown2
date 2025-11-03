@@ -1,3 +1,37 @@
+/* style.css */
+
+/* Estilos gerais para a barra de cabeçalho */
+.top-header {
+    background-color: #F1E3B7; /* Cor de fundo amarela */
+    color: #333; /* Cor do texto */
+    padding: 20px; /* Espaçamento interno */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+/* Estilo para o container do logo e nome */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 40px; /* Tamanho do logo */
+    margin-right: 10px; /* Espaço entre o logo e o texto */
+}
+
+/* Estilo para o texto */
+h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+p {
+    font-size: 0.9rem;
+    color: #777; /* Cor mais clara para o texto secundário */
+}
 body {
   font-family: Arial, sans-serif;
   text-align: center;

@@ -15,8 +15,20 @@ function calcular() {
   if (crimes.includes('fuga')) {
     pena += 10; // Fuga de Pessoa Presa
   }
-  if (crimes.includes('Ameaça')) {
-    pena += 5; // Homicídio Doloso
+  if (crimes.includes('ameaça')) {
+    pena += 5; // Ameaçar Alguém
+  }
+  if (crimes.includes('ameaça contra oficial ')) {
+    pena += 5; // Ameaçar Alguém
+  }
+  if (crimes.includes('ameaça contra autoridade')) {
+    pena += 5; // Ameaçar Alguém
+  }
+  if (crimes.includes('homicidio contra autoridade')) {
+    pena += 5; // Ameaçar Alguém
+  }
+  if (crimes.includes('')) {
+    pena += 5; // Ameaçar Alguém
   }
 
   // Aplicando atenuantes
