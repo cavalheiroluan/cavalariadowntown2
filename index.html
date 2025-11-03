@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Penal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Calculadora Penal</h1>
+
+  <div class="form-container">
+    <label for="crimes">Selecione os Crimes:</label>
+    <select id="crimes" multiple>
+      <option value="homicidio">Homicídio Doloso</option>
+      <option value="cruelty">Crueldade Animal</option>
+      <option value="fuga">Fuga de Pessoa Presa</option>
+    </select>
+
+    <label for="atenuantes">Atenuantes:</label>
+    <select id="atenuantes">
+      <option value="reup">Réu primário (Redução de 10%)</option>
+    </select>
+
+    <label for="agravantes">Agravantes:</label>
+    <select id="agravantes">
+      <option value="mau-comportamento">Mau comportamento (Aumento de 20%)</option>
+    </select>
+
+    <button onclick="calcular()">Calcular Pena</button>
+  </div>
+
+  <h2>Resultado</h2>
+  <p id="resultado">Pena Total: <span id="pena-total">0</span> meses</p>
+  
+  <button onclick="copiarRelatorio()">📋 Copiar Relatório</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
